@@ -1,23 +1,39 @@
 "use client";
 
-import { useCart } from "@/app/context/CartContext";
+import { useCart } from "../context/CartContext";
+import type { Product } from "../types";
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
+type Props = {
+  product: Product;
+  selectedSize?: string;
+  selectedPrice?: number;
 };
 
-export default function AddToCartButton({ product }: { product: Product }) {
+export default function AddToCartButton({
+  product,
+  selectedSize,
+  selectedPrice,
+}: Props) {
   const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart(
+      {
+        id: product.id,
+        name: product.name,
+        image: product.images[0],
+        price: selectedPrice ?? product.sizeOptions[0]?.price ?? 0,
+      },
+      selectedSize
+    );
+  };
 
   return (
     <button
-      onClick={() => addToCart(product)}
-      className="w-full bg-pink-500 text-white py-2 rounded-lg"
+      onClick={handleAddToCart}
+      className="rounded-xl bg-pink-500 px-6 py-3 font-semibold text-white transition hover:bg-pink-600"
     >
-      أضف إلى السلة 🛒
+      أضف إلى السلة
     </button>
   );
 }

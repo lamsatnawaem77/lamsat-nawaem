@@ -1,35 +1,22 @@
-/* استيراد خط Cairo من Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+@import "tailwindcss";
 
-/* Tailwind directives الحديثة */
-/* Disable unknown at-rule warning from linters (e.g. stylelint, vscode css) for Tailwind directives */
-/* stylelint-disable at-rule-no-unknown */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-/* stylelint-enable at-rule-no-unknown */
-/* ألوان الوضع الفاتح/الداكن */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* تطبيق الخط Cairo + النصوص */
+html,
 body {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 400;
-  line-height: 1.6;
-  color: var(--foreground);
-  background: var(--background);
+  padding: 0;
+  margin: 0;
+  background: #f7f4f2;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #171717;
+}
+
+button,
+a {
+  cursor: pointer;
 }

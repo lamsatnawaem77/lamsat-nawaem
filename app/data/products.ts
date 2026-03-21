@@ -1,33 +1,94 @@
-// app/data/products.ts
-
-export type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-};
+import type { Product } from "../types";
 
 export const products: Product[] = [
   {
     id: 1,
-    name: "عطر لمسة نواعم",
-    price: 35,
-    image: "/products/products1.png",
-    description: "عطر نسائي فاخر بثبات عالي ورائحة ناعمة"
+    slug: "elegant-women-dress",
+    name: "فستان نسائي أنيق",
+    description: "فستان ناعم ومميز مناسب للمناسبات والخروج اليومي.",
+    category: "فساتين",
+    images: ["/products/cat-dress1.png"],
+    sizeOptions: [
+      { size: "S", price: 149 },
+      { size: "M", price: 149 },
+      { size: "L", price: 149 },
+    ],
+    material: "كريب ناعم",
+    colors: ["زهري", "بيج"],
   },
   {
     id: 2,
-    name: "كريم ترطيب طبيعي",
-    price: 20,
-    image: "/products/products2.png",
-    description: "كريم مرطب للبشرة الحساسة مصنوع من مكونات طبيعية"
+    slug: "modern-abaya",
+    name: "عباية عصرية",
+    description: "عباية أنيقة بتصميم عصري وخامة مريحة جدًا.",
+    category: "عبايات",
+    images: ["/products/cat-abaya1.png"],
+    sizeOptions: [
+      { size: "S", price: 179 },
+      { size: "M", price: 179 },
+      { size: "L", price: 179 },
+    ],
+    material: "ندى",
+    colors: ["أسود", "بني"],
   },
   {
     id: 3,
-    name: "زيت شعر مغذي",
-    price: 18,
-    image: "/products/products3.png",
-    description: "زيت مغذي لتقوية الشعر ولمعانه"
-  }
+    slug: "soft-women-set",
+    name: "طقم نسائي ناعم",
+    description: "طقم نسائي بخامة لطيفة وتصميم أنثوي جميل.",
+    category: "أطقم",
+    images: ["/products/cat-homedress.png"],
+    sizeOptions: [
+      { size: "S", price: 129 },
+      { size: "M", price: 129 },
+      { size: "L", price: 129 },
+    ],
+    material: "قطن مخلوط",
+    colors: ["وردي", "سكري"],
+  },
+  {
+    id: 4,
+    slug: "women-blouse",
+    name: "بلوزة نسائية",
+    description: "بلوزة مريحة ومناسبة للاستخدام اليومي.",
+    category: "بلوزات",
+    images: ["/products/cat-womensuit.png"],
+    sizeOptions: [
+      { size: "S", price: 89 },
+      { size: "M", price: 89 },
+      { size: "L", price: 89 },
+    ],
+    material: "لينن",
+    colors: ["أبيض", "بيج"],
+  },
+  {
+    id: 5,
+    slug: "luxury-black-abaya",
+    name: "عباية سوداء فاخرة",
+    description: "عباية فاخرة بقصة أنيقة ومريحة.",
+    category: "عبايات",
+    images: ["/products/cat-black-abaya.png"],
+    sizeOptions: [
+      { size: "S", price: 199 },
+      { size: "M", price: 199 },
+      { size: "L", price: 199 },
+    ],
+    material: "كريب ملكي",
+    colors: ["أسود"],
+  },
+  {
+    id: 6,
+    slug: "elegant-outing-set",
+    name: "طقم خروج أنيق",
+    description: "طقم أنيق مناسب للخروج والمشاوير.",
+    category: "أطقم",
+    images: ["/products/cat-gzdr-dress.png"],
+    sizeOptions: [
+      { size: "S", price: 159 },
+      { size: "M", price: 159 },
+      { size: "L", price: 159 },
+    ],
+    material: "قماش صيفي",
+    colors: ["موكا", "بيج"],
+  },
 ];

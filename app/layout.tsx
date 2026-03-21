@@ -1,16 +1,19 @@
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
-import Navbar from "./components/Navbar";
+import { FavoritesProvider } from "./context/FavoritesContext";
+import ConditionalNavbar from "./components/ConditionalNavbar";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar">
+    <html lang="ar" dir="rtl">
       <body>
         <AuthProvider>
           <CartProvider>
-            <Navbar />
-            {children}
+            <FavoritesProvider>
+              <ConditionalNavbar />
+              {children}
+            </FavoritesProvider>
           </CartProvider>
         </AuthProvider>
       </body>
