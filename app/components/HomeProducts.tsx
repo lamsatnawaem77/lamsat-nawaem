@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "./AddToCartButton";
+import AddToFavoritesButton from "./AddToFavoritesButton";
 import type { Product } from "../types";
 
 type Props = {
@@ -21,12 +22,12 @@ export default function HomeProducts({ title, products }: Props) {
           عرض الكل
         </Link>
 
-        <h2 className="text-xl font-bold text-neutral-900 lg:text-2xl">
+        <h2 className="text-lg font-bold text-neutral-900 lg:text-2xl">
           {title}
         </h2>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => {
           const mainImage = product.images?.[0] ?? "/file.svg";
           const startingPrice = product.sizeOptions?.[0]?.price ?? 0;
@@ -35,10 +36,10 @@ export default function HomeProducts({ title, products }: Props) {
           return (
             <div
               key={product.id}
-              className="overflow-hidden rounded-2xl bg-[#faf7f4] p-3"
+              className="overflow-hidden rounded-2xl bg-[#faf7f4] p-2.5 sm:p-3"
             >
               <Link href={`/products/${product.slug}`}>
-                <div className="relative h-56 w-full overflow-hidden rounded-2xl bg-white">
+                <div className="relative h-40 w-full overflow-hidden rounded-2xl bg-white sm:h-52 lg:h-56">
                   <Image
                     src={mainImage}
                     alt={product.name}
@@ -49,18 +50,21 @@ export default function HomeProducts({ title, products }: Props) {
               </Link>
 
               <div className="mt-3 text-right">
-                <Link href={`/products/${product.slug}`}>
-                  <h3 className="line-clamp-2 text-sm font-semibold text-neutral-900 lg:text-base">
-                    {product.name}
-                  </h3>
-                </Link>
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <AddToFavoritesButton product={product} />
+                  <Link href={`/products/${product.slug}`} className="flex-1">
+                    <h3 className="line-clamp-2 text-sm font-semibold text-neutral-900 lg:text-base">
+                      {product.name}
+                    </h3>
+                  </Link>
+                </div>
 
-                <p className="mt-2 line-clamp-2 text-sm text-neutral-500">
+                <p className="mt-2 line-clamp-2 text-xs text-neutral-500 sm:text-sm">
                   {product.description}
                 </p>
 
                 <div className="mt-2 flex items-center justify-end gap-2">
-                  <span className="text-base font-bold text-black">
+                  <span className="text-sm font-bold text-black sm:text-base">
                     {startingPrice} د.ك
                   </span>
                 </div>

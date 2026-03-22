@@ -3,11 +3,41 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useFavorites } from "../context/FavoritesContext";
+import { useAuth } from "../context/AuthContext";
 import AddToCartButton from "../components/AddToCartButton";
 import AddToFavoritesButton from "../components/AddToFavoritesButton";
 
 export default function FavoritesPage() {
+  const { user } = useAuth();
   const { favorites, loading } = useFavorites();
+
+  if (!user) {
+    return (
+      <main className="mx-auto min-h-screen max-w-6xl px-4 py-10">
+        <div className="mb-6 flex justify-start">
+          <Link
+            href="/"
+            className="rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
+          >
+            العودة إلى الرئيسية
+          </Link>
+        </div>
+
+        <div className="rounded-2xl bg-white p-10 text-center shadow-sm">
+          <h1 className="mb-4 text-2xl font-bold">المفضلة</h1>
+          <p className="mb-5 text-gray-600">
+            يجب تسجيل الدخول أولًا لعرض المنتجات المحفوظة في المفضلة
+          </p>
+          <Link
+            href="/login"
+            className="rounded-full bg-pink-500 px-6 py-3 font-semibold text-white transition hover:bg-pink-600"
+          >
+            تسجيل الدخول
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   if (loading) {
     return (

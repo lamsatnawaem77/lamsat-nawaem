@@ -16,6 +16,7 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   OAuthProvider,
+  sendEmailVerification,
   User,
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
@@ -51,7 +52,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+
+    if (result.user && !result.user.emailVerified) {
+      await sendEmailVerification(result.user);
+    }
   };
 
   const loginWithGoogle = async () => {

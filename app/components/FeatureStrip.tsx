@@ -1,4 +1,9 @@
-import { BadgePercent, CreditCard, ShieldCheck, Truck } from "lucide-react";
+import {
+  BadgePercent,
+  CreditCard,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 
 const items = [
   {
@@ -26,7 +31,7 @@ const items = [
 export default function FeatureStrip() {
   return (
     <section className="rounded-[28px] bg-[#efe5dd] p-3 shadow-sm lg:p-4">
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
         {items.map((item) => {
           const Icon = item.icon;
 
@@ -42,7 +47,7 @@ export default function FeatureStrip() {
                 <Icon size={18} />
               </div>
 
-              <p className="mt-2 text-xs text-neutral-600 lg:text-sm">
+              <p className="mt-2 text-xs leading-5 text-neutral-600 lg:text-sm">
                 {item.desc}
               </p>
             </div>

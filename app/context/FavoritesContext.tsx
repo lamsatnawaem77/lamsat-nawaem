@@ -24,36 +24,17 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(
   undefined
 );
 
-const LOCAL_STORAGE_KEY = "lamsat_favorites";
-
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // تحميل محلي للمستخدم غير المسجل
   useEffect(() => {
-    if (user) return;
-
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      setFavorites(saved ? JSON.parse(saved) : []);
-    } catch {
+    if (!user) {
       setFavorites([]);
-    } finally {
       setLoading(false);
+      return;
     }
-  }, [user]);
-
-  // حفظ محلي عند عدم تسجيل الدخول
-  useEffect(() => {
-    if (user) return;
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(favorites));
-  }, [favorites, user]);
-
-  // ربط المفضلات بـ Firestore عند تسجيل الدخول
-  useEffect(() => {
-    if (!user) return;
 
     setLoading(true);
 
@@ -61,26 +42,9 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
     const unsubscribe = onSnapshot(
       ref,
-      async (snapshot) => {
+      (snapshot) => {
         const cloudFavorites = (snapshot.data()?.items as Product[]) ?? [];
-
-        // أول مرة فقط: لو توجد مفضلات محلية ولم يوجد ملف سحابي، ارفعها
-        if (!snapshot.exists()) {
-          const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
-          const localFavorites: Product[] = localRaw ? JSON.parse(localRaw) : [];
-
-          if (localFavorites.length > 0) {
-            await setDoc(ref, { items: localFavorites }, { merge: true });
-            localStorage.removeItem(LOCAL_STORAGE_KEY);
-            setFavorites(localFavorites);
-          } else {
-            setFavorites([]);
-          }
-        } else {
-          setFavorites(cloudFavorites);
-          localStorage.removeItem(LOCAL_STORAGE_KEY);
-        }
-
+        setFavorites(cloudFavorites);
         setLoading(false);
       },
       () => {
@@ -97,17 +61,16 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleFavorite = async (product: Product) => {
+    if (!user) {
+      return;
+    }
+
     const exists = favorites.some((item) => item.id === product.id);
     const updated = exists
       ? favorites.filter((item) => item.id !== product.id)
       : [...favorites, product];
 
     setFavorites(updated);
-
-    if (!user) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-      return;
-    }
 
     const ref = doc(db, "users", user.uid, "meta", "favorites");
     await setDoc(ref, { items: updated }, { merge: true });

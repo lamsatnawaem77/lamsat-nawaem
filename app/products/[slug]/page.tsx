@@ -34,19 +34,20 @@ export default function ProductDetailsPage() {
       .slice(0, 4);
   }, [product]);
 
-  <div className="mb-4 flex items-start justify-between gap-4">
-  <AddToFavoritesButton product={product} />
-  <div className="text-right">
-    <p className="mb-2 text-sm text-gray-500">{product.category}</p>
-    <h1 className="text-3xl font-bold">{product.name}</h1>
-  </div>
-</div>
-
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+    <main className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
+      <div className="mb-6 flex justify-start">
+        <Link
+          href="/"
+          className="rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
+        >
+          العودة إلى الرئيسية
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
         <div>
-          <div className="relative mb-4 h-[500px] w-full overflow-hidden rounded-2xl bg-white">
+          <div className="relative mb-4 h-[360px] w-full overflow-hidden rounded-2xl bg-white sm:h-[420px] md:h-[500px]">
             <Image
               src={selectedImage}
               alt={product.name}
@@ -55,22 +56,13 @@ export default function ProductDetailsPage() {
             />
           </div>
 
-<div className="mb-6 flex justify-start">
-  <Link
-    href="/"
-    className="rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
-  >
-    العودة إلى الرئيسية
-  </Link>
-</div>
-
           <div className="flex flex-wrap gap-3">
             {product.images.map((image) => (
               <button
                 key={image}
                 type="button"
                 onClick={() => setSelectedImage(image)}
-                className={`relative h-24 w-24 overflow-hidden rounded-xl border-2 ${
+                className={`relative h-20 w-20 overflow-hidden rounded-xl border-2 sm:h-24 sm:w-24 ${
                   selectedImage === image
                     ? "border-pink-500"
                     : "border-gray-200"
@@ -88,9 +80,14 @@ export default function ProductDetailsPage() {
         </div>
 
         <div className="text-right">
-          <p className="mb-2 text-sm text-gray-500">{product.category}</p>
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <AddToFavoritesButton product={product} />
 
-          <h1 className="mb-4 text-3xl font-bold">{product.name}</h1>
+            <div className="text-right">
+              <p className="mb-2 text-sm text-gray-500">{product.category}</p>
+              <h1 className="text-2xl font-bold sm:text-3xl">{product.name}</h1>
+            </div>
+          </div>
 
           <p className="mb-4 text-2xl font-bold text-pink-600">
             {selectedPrice} د.ك
@@ -138,7 +135,8 @@ export default function ProductDetailsPage() {
 
           <div className="mb-6">
             <p className="text-sm text-gray-500">
-              المقاس المختار: <span className="font-semibold">{selectedSize}</span>
+              المقاس المختار:{" "}
+              <span className="font-semibold">{selectedSize}</span>
             </p>
           </div>
 

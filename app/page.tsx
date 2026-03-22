@@ -1,3 +1,4 @@
+import HeroSection from "./components/HeroSection";
 import CategoryCircles from "./components/CategoryCircles";
 import FeatureStrip from "./components/FeatureStrip";
 import HomeProducts from "./components/HomeProducts";
@@ -5,9 +6,11 @@ import { products } from "./data/products";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#f8f3ee] pb-10 pt-44 lg:pt-52">
-      <div className="mx-auto w-full max-w-7xl px-3 sm:px-4 lg:px-6">
-        <div className="relative z-20 -mt-6 lg:-mt-10">
+    <main className="min-h-screen bg-[#f8f3ee] pb-10">
+      <HeroSection />
+
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-3 sm:px-4 lg:px-6">
+        <div className="relative z-10 -mt-6 lg:-mt-10">
           <FeatureStrip />
         </div>
 
@@ -31,7 +34,10 @@ export default function HomePage() {
               </p>
             </div>
 
-            <button className="rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 lg:text-base">
+            <button
+              type="button"
+              className="rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 lg:text-base"
+            >
               تسوقي الآن
             </button>
           </div>

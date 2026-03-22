@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -34,9 +35,11 @@ export default function RegisterPage() {
     try {
       setLoading(true);
       setError("");
+      setMessage("");
       await register(email, password);
+      setMessage("تم إنشاء الحساب. أرسلنا رسالة تحقق إلى بريدك الإلكتروني.");
       router.push("/");
-    } catch (err: any) {
+    } catch {
       setError("فشل إنشاء الحساب. ربما البريد مستخدم مسبقًا.");
     } finally {
       setLoading(false);
@@ -83,6 +86,10 @@ export default function RegisterPage() {
 
         {error && (
           <p className="mb-4 text-center text-sm text-red-500">{error}</p>
+        )}
+
+        {message && (
+          <p className="mb-4 text-center text-sm text-green-600">{message}</p>
         )}
 
         <button

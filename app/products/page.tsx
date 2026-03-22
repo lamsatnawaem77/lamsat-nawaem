@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import ProductsClientPage from "./ProductsClientPage";
+import { products } from "../data/products";
 
 export default function ProductsPage() {
   return (
@@ -10,7 +11,7 @@ export default function ProductsPage() {
         </main>
       }
     >
-      <ProductsClientPage />
+      <ProductsClientPage products={products} />
     </Suspense>
   );
 }
