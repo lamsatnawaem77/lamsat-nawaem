@@ -12,7 +12,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   FacebookAuthProvider,
   OAuthProvider,
@@ -20,10 +21,12 @@ import {
   User,
 } from "firebase/auth";
 import { auth } from "../lib/firebase";
+import { isAdminEmail } from "../lib/admin";
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
@@ -39,10 +42,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+    let unsubscribe = () => {};
+
+    const initAuth = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          setUser(result.user);
+        }
+      } catch (error) {
+        console.error("Redirect login error:", error);
+      }
+
+      unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        setUser(currentUser);
+        setLoading(false);
+      });
+    };
+
+    initAuth();
 
     return () => unsubscribe();
   }, []);
@@ -61,28 +79,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   };
 
   const loginWithFacebook = async () => {
     const provider = new FacebookAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   };
 
   const loginWithMicrosoft = async () => {
     const provider = new OAuthProvider("microsoft.com");
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   };
 
   const logout = async () => {
     await signOut(auth);
   };
 
+  const isAdmin = isAdminEmail(user?.email);
+
   return (
     <AuthContext.Provider
       value={{
         user,
         loading,
+        isAdmin,
         login,
         register,
         loginWithGoogle,

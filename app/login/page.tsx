@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const {
+    user,
+    loading: authLoading,
+    isAdmin,
     login,
     loginWithGoogle,
     loginWithFacebook,
@@ -20,15 +23,29 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (!authLoading && user) {
+      if (isAdmin) {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
+    }
+  }, [user, authLoading, isAdmin, router]);
+
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      setError("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
       await login(email, password);
-      router.push("/");
-    } catch {
+    } catch (error: any) {
+      console.error("Email login error:", error);
       setError("فشل تسجيل الدخول. تأكدي من البريد وكلمة المرور.");
-    } finally {
       setLoading(false);
     }
   };
@@ -38,10 +55,9 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
       await loginWithGoogle();
-      router.push("/");
-    } catch {
+    } catch (error: any) {
+      console.error("Google login error:", error);
       setError("فشل تسجيل الدخول بحساب Google.");
-    } finally {
       setLoading(false);
     }
   };
@@ -51,10 +67,9 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
       await loginWithMicrosoft();
-      router.push("/");
-    } catch {
+    } catch (error: any) {
+      console.error("Microsoft login error:", error);
       setError("فشل تسجيل الدخول بحساب Microsoft.");
-    } finally {
       setLoading(false);
     }
   };
@@ -64,10 +79,9 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
       await loginWithFacebook();
-      router.push("/");
-    } catch {
+    } catch (error: any) {
+      console.error("Facebook login error:", error);
       setError("فشل تسجيل الدخول بحساب Facebook.");
-    } finally {
       setLoading(false);
     }
   };
@@ -108,7 +122,7 @@ export default function LoginPage() {
 
         <button
           onClick={handleLogin}
-          disabled={loading}
+          disabled={loading || authLoading}
           className="mb-3 w-full rounded-lg bg-pink-500 py-3 text-white transition hover:bg-pink-600 disabled:opacity-60"
         >
           {loading ? "جاري تسجيل الدخول..." : "دخول"}
@@ -118,7 +132,7 @@ export default function LoginPage() {
 
         <button
           onClick={handleGoogle}
-          disabled={loading}
+          disabled={loading || authLoading}
           className="mb-3 w-full rounded-lg border py-3 transition hover:bg-gray-50 disabled:opacity-60"
         >
           المتابعة باستخدام Google
@@ -126,7 +140,7 @@ export default function LoginPage() {
 
         <button
           onClick={handleMicrosoft}
-          disabled={loading}
+          disabled={loading || authLoading}
           className="mb-3 w-full rounded-lg border py-3 transition hover:bg-gray-50 disabled:opacity-60"
         >
           المتابعة باستخدام Microsoft
@@ -134,7 +148,7 @@ export default function LoginPage() {
 
         <button
           onClick={handleFacebook}
-          disabled={loading}
+          disabled={loading || authLoading}
           className="w-full rounded-lg border py-3 transition hover:bg-gray-50 disabled:opacity-60"
         >
           المتابعة باستخدام Facebook

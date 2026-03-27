@@ -36,10 +36,13 @@ export default function RegisterPage() {
       setLoading(true);
       setError("");
       setMessage("");
+
       await register(email, password);
+
       setMessage("تم إنشاء الحساب. أرسلنا رسالة تحقق إلى بريدك الإلكتروني.");
       router.push("/");
-    } catch {
+    } catch (error: any) {
+      console.error("Register error:", error);
       setError("فشل إنشاء الحساب. ربما البريد مستخدم مسبقًا.");
     } finally {
       setLoading(false);

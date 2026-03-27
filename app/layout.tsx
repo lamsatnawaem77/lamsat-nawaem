@@ -2,6 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { FavoritesProvider } from "./context/FavoritesContext";
+import { CurrencyProvider } from "./context/CurrencyContext";
 import ConditionalNavbar from "./components/ConditionalNavbar";
 
 export default function RootLayout({
@@ -15,8 +16,10 @@ export default function RootLayout({
         <AuthProvider>
           <CartProvider>
             <FavoritesProvider>
-              <ConditionalNavbar />
-              {children}
+              <CurrencyProvider>
+                <ConditionalNavbar />
+                {children}
+              </CurrencyProvider>
             </FavoritesProvider>
           </CartProvider>
         </AuthProvider>

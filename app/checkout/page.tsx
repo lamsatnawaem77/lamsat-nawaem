@@ -6,13 +6,14 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
+import { useCurrency } from "@/app/context/CurrencyContext";
 
 export default function CheckoutPage() {
   const { user } = useAuth();
   const { cart, clearCart } = useCart();
+  const { formatPrice, currency } = useCurrency();
   const router = useRouter();
 
-  // 🔐 حماية الصفحة
   useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -26,7 +27,7 @@ export default function CheckoutPage() {
     0
   );
 
-  const tax = subtotal * 0.05; // 5%
+  const tax = subtotal * 0.05;
   const total = subtotal + tax;
 
   if (cart.length === 0) {
@@ -45,15 +46,23 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-6">💳 إتمام الشراء</h1>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold">💳 إتمام الشراء</h1>
+        <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold shadow">
+          {currency === "TRY" ? "₺ TRY" : "$ USD"}
+        </span>
+      </div>
 
       <div className="bg-white p-4 rounded-lg shadow space-y-3">
         {cart.map((item) => (
-          <div key={item.id} className="flex justify-between">
+          <div
+            key={`${item.id}-${item.size ?? "no-size"}`}
+            className="flex justify-between gap-3"
+          >
             <span>
               {item.name} × {item.quantity}
             </span>
-            <span>${item.price * item.quantity}</span>
+            <span>{formatPrice(item.price * item.quantity)}</span>
           </div>
         ))}
 
@@ -61,17 +70,17 @@ export default function CheckoutPage() {
 
         <div className="flex justify-between">
           <span>المجموع الفرعي</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>{formatPrice(subtotal)}</span>
         </div>
 
         <div className="flex justify-between">
           <span>الضريبة (5%)</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>{formatPrice(tax)}</span>
         </div>
 
         <div className="flex justify-between font-bold text-lg">
           <span>الإجمالي</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{formatPrice(total)}</span>
         </div>
 
         <button

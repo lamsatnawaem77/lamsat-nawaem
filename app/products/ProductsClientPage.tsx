@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AddToCartButton from "../components/AddToCartButton";
 import AddToFavoritesButton from "../components/AddToFavoritesButton";
+import { useCurrency } from "../context/CurrencyContext";
 import type { Product } from "../types";
 
 type Props = {
@@ -17,6 +18,7 @@ const categories = ["الكل", "عبايات", "فساتين", "أطقم", "ب�
 export default function ProductsClientPage({ products }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { formatPrice, currency } = useCurrency();
 
   const currentCategory = searchParams.get("category") || "الكل";
   const currentSearch = searchParams.get("search") || "";
@@ -68,13 +70,17 @@ export default function ProductsClientPage({ products }: Props) {
   return (
     <main className="relative z-10 min-h-screen bg-[#f8f3ee] px-4 py-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex justify-start">
+        <div className="mb-6 flex items-center justify-between gap-3">
           <Link
             href="/"
             className="rounded-full border border-black px-5 py-3 text-sm font-semibold transition hover:bg-black hover:text-white"
           >
             العودة إلى الرئيسية
           </Link>
+
+          <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold shadow-sm">
+            {currency === "TRY" ? "₺ TRY" : "$ USD"}
+          </span>
         </div>
 
         <h1 className="mb-8 text-center text-4xl font-bold">منتجاتنا</h1>
@@ -152,7 +158,7 @@ export default function ProductsClientPage({ products }: Props) {
                     </div>
 
                     <p className="mb-2 text-right text-2xl font-bold text-pink-600">
-                      يبدأ من {startingPrice} د.ك
+                      يبدأ من {formatPrice(startingPrice)}
                     </p>
 
                     <p className="mb-2 text-right text-lg text-gray-600">

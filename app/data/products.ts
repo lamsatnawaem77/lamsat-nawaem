@@ -91,4 +91,19 @@ export const products: Product[] = [
     material: "قماش صيفي",
     colors: ["موكا", "بيج"],
   },
+  {
+    id: 7,
+    slug: "elegant-outing-set",
+    name: "طقم خروج أنيق",
+    description: "طقم أنيق مناسب للخروج والمشاوير.",
+    category: "أطقم",
+    images: ["/products/tttt.png"],
+    sizeOptions: [
+      { size: "S", price: 159 },
+      { size: "M", price: 159 },
+      { size: "L", price: 159 },
+    ],
+    material: "قماش صيفي",
+    colors: ["موكا", "بيج"],
+  },
 ];

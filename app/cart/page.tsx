@@ -4,9 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 
 export default function CartPage() {
   const { cart, increaseQty, decreaseQty, removeFromCart, totalPrice } = useCart();
+  const { formatPrice, currency } = useCurrency();
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -23,18 +25,21 @@ export default function CartPage() {
     const orderText = cart
       .map(
         (item) =>
-          `• ${item.name}${item.size ? ` - المقاس: ${item.size}` : ""} × ${item.quantity} = ${item.price * item.quantity} د.ع`
+          `• ${item.name}${item.size ? ` - المقاس: ${item.size}` : ""} × ${item.quantity} = ${formatPrice(item.price * item.quantity)}`
       )
       .join("%0A");
+
+    const totalFormatted = formatPrice(totalPrice);
 
     const message =
       `مرحباً، أريد تأكيد الطلب:%0A%0A` +
       `الاسم: ${customerName}%0A` +
-      `رقم الهاتف: ${customerPhone}%0A%0A` +
+      `رقم الهاتف: ${customerPhone}%0A` +
+      `العملة المختارة: ${currency}%0A%0A` +
       `الطلبات:%0A${orderText}%0A%0A` +
-      `المجموع: ${totalPrice} د.ع`;
+      `المجموع: ${totalFormatted}`;
 
-    const phoneNumber = "905301106809"; // بدّل الرقم برقم واتساب الحقيقي
+    const phoneNumber = "905301106809";
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
 
@@ -51,7 +56,12 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-white px-4 py-8 md:px-10">
-      <h1 className="text-2xl md:text-3xl font-bold mb-8 text-center">سلة التسوق</h1>
+      <div className="mb-8 flex items-center justify-between gap-3">
+        <h1 className="text-2xl md:text-3xl font-bold text-center">سلة التسوق</h1>
+        <span className="rounded-full bg-gray-100 px-4 py-2 text-sm font-semibold">
+          {currency === "TRY" ? "₺ TRY" : "$ USD"}
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
@@ -76,7 +86,9 @@ export default function CartPage() {
                   <p className="text-sm text-gray-500 mt-1">المقاس: {item.size}</p>
                 )}
 
-                <p className="text-pink-600 font-bold mt-2">{item.price} د.ع</p>
+                <p className="text-pink-600 font-bold mt-2">
+                  {formatPrice(item.price)}
+                </p>
 
                 <div className="flex items-center justify-center md:justify-start gap-3 mt-4">
                   <button
@@ -100,7 +112,7 @@ export default function CartPage() {
               </div>
 
               <div className="flex flex-col items-center gap-3">
-                <p className="font-bold">{item.price * item.quantity} د.ع</p>
+                <p className="font-bold">{formatPrice(item.price * item.quantity)}</p>
                 <button
                   onClick={() => removeFromCart(item.id, item.size)}
                   className="text-red-500 hover:text-red-700 font-medium"
@@ -122,17 +134,17 @@ export default function CartPage() {
 
           <div className="flex justify-between text-lg font-bold border-t pt-4 mb-5">
             <span>المجموع</span>
-            <span>{totalPrice} د.ع</span>
+            <span>{formatPrice(totalPrice)}</span>
           </div>
 
-<div className="mb-6 flex justify-start">
-  <Link
-    href="/"
-    className="rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
-  >
-    العودة إلى الرئيسية
-  </Link>
-</div>
+          <div className="mb-6 flex justify-start">
+            <Link
+              href="/"
+              className="rounded-full border bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
+            >
+              العودة إلى الرئيسية
+            </Link>
+          </div>
 
           <div className="space-y-3">
             <input

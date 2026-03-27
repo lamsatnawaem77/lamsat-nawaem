@@ -2,9 +2,75 @@ import HeroSection from "./components/HeroSection";
 import CategoryCircles from "./components/CategoryCircles";
 import FeatureStrip from "./components/FeatureStrip";
 import HomeProducts from "./components/HomeProducts";
-import { products } from "./data/products";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./lib/firebase";
 
-export default function HomePage() {
+type HomePageProduct = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  images: string[];
+  category: string;
+  stock: number;
+  featured: boolean;
+  sizeOptions: {
+    size: string;
+    price: number;
+  }[];
+};
+
+type FirestoreProduct = {
+  name?: string;
+  description?: string;
+  price?: number;
+  image?: string;
+  images?: string[];
+  category?: string;
+  stock?: number;
+  featured?: boolean;
+  slug?: string;
+};
+
+async function getProducts() {
+  const querySnapshot = await getDocs(collection(db, "products"));
+
+  return querySnapshot.docs.map((doc): HomePageProduct => {
+    const data = doc.data() as FirestoreProduct;
+
+    const name = data.name ?? "منتج بدون اسم";
+    const description = data.description ?? "";
+    const image = data.images?.[0] || data.image || "/file.svg";
+    const price = typeof data.price === "number" ? data.price : 0;
+
+    return {
+      id: doc.id,
+      name,
+      slug:
+        data.slug ??
+        name
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^\u0600-\u06FFa-zA-Z0-9-]/g, ""),
+      description,
+      images: data.images && data.images.length > 0 ? data.images : [image],
+      category: data.category ?? "",
+      stock: data.stock ?? 0,
+      featured: data.featured ?? false,
+      sizeOptions: [
+        {
+          size: "افتراضي",
+          price,
+        },
+      ],
+    };
+  });
+}
+
+export default async function HomePage() {
+  const products = await getProducts();
+
   return (
     <main className="min-h-screen bg-[#f8f3ee] pb-10">
       <HeroSection />

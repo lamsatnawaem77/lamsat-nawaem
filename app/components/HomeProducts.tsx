@@ -4,7 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "./AddToCartButton";
 import AddToFavoritesButton from "./AddToFavoritesButton";
-import type { Product } from "../types";
+import { useCurrency } from "../context/CurrencyContext";
+
+type Product = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  images: string[];
+  category: string;
+  stock: number;
+  featured?: boolean;
+  sizeOptions: {
+    size: string;
+    price: number;
+  }[];
+};
 
 type Props = {
   title: string;
@@ -12,6 +27,8 @@ type Props = {
 };
 
 export default function HomeProducts({ title, products }: Props) {
+  const { formatPrice } = useCurrency();
+
   return (
     <section className="rounded-[28px] bg-white p-4 shadow-sm lg:p-6">
       <div className="mb-4 flex items-center justify-between">
@@ -65,7 +82,7 @@ export default function HomeProducts({ title, products }: Props) {
 
                 <div className="mt-2 flex items-center justify-end gap-2">
                   <span className="text-sm font-bold text-black sm:text-base">
-                    {startingPrice} د.ك
+                    {formatPrice(startingPrice)}
                   </span>
                 </div>
 

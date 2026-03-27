@@ -1,21 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
+  const { user, loading: authLoading, isAdmin } = useAuth();
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [material, setMaterial] = useState("");
   const [colors, setColors] = useState("");
-  const [images, setImages] = useState("");
   const [size1, setSize1] = useState("");
   const [price1, setPrice1] = useState("");
   const [size2, setSize2] = useState("");
   const [price2, setPrice2] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!authLoading && (!user || !isAdmin)) {
+      router.push("/login");
+    }
+  }, [authLoading, user, isAdmin, router]);
+
+  const createSlug = (text: string) => {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\u0600-\u06FFa-zA-Z0-9-]/g, "");
+  };
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,18 +43,38 @@ export default function AdminPage() {
     setMessage("");
 
     try {
+      if (!imageFile) {
+        setMessage("يرجى اختيار صورة للمنتج");
+        setLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const uploadData = await uploadRes.json();
+
+      if (!uploadRes.ok || !uploadData.url) {
+        throw new Error(uploadData.error || "فشل رفع الصورة");
+      }
+
+      const slug = createSlug(name);
+
       await addDoc(collection(db, "products"), {
         name,
+        slug,
         description,
         material,
         colors: colors
           .split(",")
           .map((c) => c.trim())
           .filter(Boolean),
-        images: images
-          .split(",")
-          .map((img) => img.trim())
-          .filter(Boolean),
+        images: [uploadData.url],
         sizeOptions: [
           ...(size1 && price1 ? [{ size: size1, price: Number(price1) }] : []),
           ...(size2 && price2 ? [{ size: size2, price: Number(price2) }] : []),
@@ -45,12 +85,12 @@ export default function AdminPage() {
       setDescription("");
       setMaterial("");
       setColors("");
-      setImages("");
       setSize1("");
       setPrice1("");
       setSize2("");
       setPrice2("");
-      setMessage("تمت إضافة المنتج بنجاح 🌸");
+      setImageFile(null);
+      setMessage("تمت إضافة المنتج ورفع الصورة بنجاح 🌸");
     } catch (error) {
       console.error(error);
       setMessage("حدث خطأ أثناء إضافة المنتج");
@@ -58,6 +98,18 @@ export default function AdminPage() {
 
     setLoading(false);
   };
+
+  if (authLoading) {
+    return (
+      <main className="max-w-3xl mx-auto px-4 py-10">
+        <p className="text-center text-lg font-semibold">جاري التحقق...</p>
+      </main>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return null;
+  }
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
@@ -113,14 +165,11 @@ export default function AdminPage() {
         </div>
 
         <div>
-          <label className="block mb-2 font-semibold">
-            روابط الصور أو مساراتها (افصلي بينها بفاصلة)
-          </label>
+          <label className="block mb-2 font-semibold">صورة المنتج</label>
           <input
-            type="text"
-            value={images}
-            onChange={(e) => setImages(e.target.value)}
-            placeholder="/products/bradi-light-1.jpeg, /products/bradi-light-2.jpeg"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
             className="w-full border rounded-xl px-4 py-3"
             required
           />
