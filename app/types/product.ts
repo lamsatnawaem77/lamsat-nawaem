@@ -4,7 +4,7 @@ export type SizeOption = {
 };
 
 export type Product = {
-  id: number | string;
+  id: string;
   name: string;
   image: string;
   price: number;
@@ -13,4 +13,8 @@ export type Product = {
   material?: string;
   colors: string[];
   sizeOptions: SizeOption[];
+  slug?: string;
+  images?: string[];
+  stock?: number;
+  featured?: boolean;
 };

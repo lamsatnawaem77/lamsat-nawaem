@@ -15,7 +15,7 @@ import type { Product } from "../types";
 
 type FavoritesContextType = {
   favorites: Product[];
-  isFavorite: (id: number) => boolean;
+  isFavorite: (id: string) => boolean;
   toggleFavorite: (product: Product) => Promise<void>;
   loading: boolean;
 };
@@ -56,7 +56,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, [user]);
 
-  const isFavorite = (id: number) => {
+  const isFavorite = (id: string) => {
     return favorites.some((item) => item.id === id);
   };
 

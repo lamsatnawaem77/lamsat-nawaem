@@ -2,7 +2,7 @@ import type { Product } from "../types";
 
 export const products: Product[] = [
   {
-    id: 1,
+    id: "1",
     slug: "elegant-women-dress",
     name: "فستان نسائي أنيق",
     description: "فستان ناعم ومميز مناسب للمناسبات والخروج اليومي.",
@@ -17,7 +17,7 @@ export const products: Product[] = [
     colors: ["زهري", "بيج"],
   },
   {
-    id: 2,
+    id: "2",
     slug: "modern-abaya",
     name: "عباية عصرية",
     description: "عباية أنيقة بتصميم عصري وخامة مريحة جدًا.",
@@ -32,7 +32,7 @@ export const products: Product[] = [
     colors: ["أسود", "بني"],
   },
   {
-    id: 3,
+    id: "3",
     slug: "soft-women-set",
     name: "طقم نسائي ناعم",
     description: "طقم نسائي بخامة لطيفة وتصميم أنثوي جميل.",
@@ -47,7 +47,7 @@ export const products: Product[] = [
     colors: ["وردي", "سكري"],
   },
   {
-    id: 4,
+    id: "4",
     slug: "women-blouse",
     name: "بلوزة نسائية",
     description: "بلوزة مريحة ومناسبة للاستخدام اليومي.",
@@ -62,7 +62,7 @@ export const products: Product[] = [
     colors: ["أبيض", "بيج"],
   },
   {
-    id: 5,
+    id: "5",
     slug: "luxury-black-abaya",
     name: "عباية سوداء فاخرة",
     description: "عباية فاخرة بقصة أنيقة ومريحة.",
@@ -77,7 +77,7 @@ export const products: Product[] = [
     colors: ["أسود"],
   },
   {
-    id: 6,
+    id: "6",
     slug: "elegant-outing-set",
     name: "طقم خروج أنيق",
     description: "طقم أنيق مناسب للخروج والمشاوير.",
@@ -92,8 +92,8 @@ export const products: Product[] = [
     colors: ["موكا", "بيج"],
   },
   {
-    id: 7,
-    slug: "elegant-outing-set",
+    id: "7",
+    slug: "elegant-outing-set-2",
     name: "طقم خروج أنيق",
     description: "طقم أنيق مناسب للخروج والمشاوير.",
     category: "أطقم",
