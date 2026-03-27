@@ -1,18 +1,20 @@
-export type ProductSizeOption = {
+export type SizeOption = {
   size: string;
   price: number;
 };
 
 export type Product = {
   id: string;
-  name: string;
   slug: string;
+  name: string;
   description: string;
-  images: string[];
   category: string;
-  stock: number;
+  images: string[];
+  sizeOptions: SizeOption[];
+  material?: string;
+  colors?: string[];
+  stock?: number;
   featured?: boolean;
-  sizeOptions: ProductSizeOption[];
 };
 
 export type CartItem = {
